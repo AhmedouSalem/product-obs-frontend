@@ -1,0 +1,32 @@
+.container { height: 100vh; }
+.sidenav { width: 240px; }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.title { font-weight: 700; }
+.spacer { flex: 1; }
+.user { opacity: 0.95; margin-right: 16px; font-size: 13px; }
+
+.content {
+  padding: 18px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+a.active {
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+}

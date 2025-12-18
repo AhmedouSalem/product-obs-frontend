@@ -1,0 +1,6 @@
+.content {
+  display: grid;
+  gap: 12px;
+  padding-top: 8px;
+  width: min(520px, 100%);
+}

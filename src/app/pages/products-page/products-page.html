@@ -1,0 +1,179 @@
+<div class="page">
+  <div class="header">
+    <h2>Products</h2>
+    <div class="header-actions">
+      <a mat-button routerLink="/categories">
+        <mat-icon>category</mat-icon>
+        Categories
+      </a>
+
+      <button mat-raised-button color="primary"
+        (click)="openCreateDialog()"
+        [disabled]="loading || !categories.length">
+        <mat-icon>add</mat-icon>
+        Create
+      </button>
+
+    </div>
+  </div>
+
+  <mat-card class="card">
+    <mat-card-content class="toolbar">
+      <button mat-stroked-button (click)="loadAll()" [disabled]="loading">
+        <mat-icon>refresh</mat-icon>
+        Load all
+      </button>
+
+      <button mat-stroked-button (click)="mostExpensive()" [disabled]="loading">
+        <mat-icon>trending_up</mat-icon>
+        Most expensive
+      </button>
+
+      <mat-form-field appearance="outline" class="catField">
+        <mat-label>Category</mat-label>
+        <mat-select [(ngModel)]="selectedCategoryId"
+          (selectionChange)="onCategoryChange()">
+          <mat-option [value]="null">All</mat-option>
+          <mat-option *ngFor="let c of categories" [value]="c.id">
+            {{ c.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="searchField">
+        <mat-label>Search</mat-label>
+        <input
+          matInput
+          placeholder="Name, category, price…"
+          (keyup)="applySearch($event.target.value)" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <!-- <button mat-stroked-button (click)="filterByCategory()"
+        [disabled]="loading">
+        <mat-icon>filter_alt</mat-icon>
+        Filter
+      </button> -->
+
+      <button mat-stroked-button (click)="mostExpensiveByCategory()"
+        [disabled]="loading">
+        <mat-icon>star</mat-icon>
+        Most expensive by category
+      </button>
+
+      <!-- <span class="spacer"></span> -->
+
+      <!-- Navigation prev/next -->
+      <!-- <button mat-button (click)="previous()"
+        [disabled]="!dataSource.data.length">
+        <mat-icon>chevron_left</mat-icon>
+        Previous
+      </button>
+      <button mat-button (click)="next()" [disabled]="!dataSource.data.length">
+        Next
+        <mat-icon>chevron_right</mat-icon>
+      </button> -->
+    </mat-card-content>
+  </mat-card>
+
+  <div class="grid">
+    <mat-card class="card">
+      <mat-card-content>
+        <div class="table-wrap">
+          <table mat-table [dataSource]="dataSource" matSort
+            class="mat-elevation-z0">
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+              <td mat-cell *matCellDef="let row">#{{ row.id }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+              <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+              <td mat-cell *matCellDef="let row">{{ row.price }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="categoryName">
+              <th mat-header-cell *matHeaderCellDef
+                mat-sort-header>Category</th>
+              <td mat-cell *matCellDef="let row">{{ row.categoryName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="expiryDate">
+              <th mat-header-cell *matHeaderCellDef>Expiry</th>
+              <td mat-cell *matCellDef="let row">{{ formatDate(row.expiryDate)
+                }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let row">
+                <button mat-button (click)="selectRow(row)">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+
+                <button mat-button (click)="openEditDialog(row)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+
+                <button mat-button color="warn"
+                  (click)="openDeleteDialog(row)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+            <tr mat-row
+              *matRowDef="let row; columns: displayedColumns;"
+              (click)="selectRow(row)"
+              [class.selected]="isSelected(row)">
+            </tr>
+          </table>
+        </div>
+
+        <mat-paginator [pageSize]="10" [pageSizeOptions]="[5,10,25]"
+          showFirstLastButtons></mat-paginator>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Details panel -->
+    <mat-card class="card details">
+      <mat-card-title>Details</mat-card-title>
+      <mat-card-content *ngIf="selected; else empty">
+        <div class="kv"><span>ID</span><span>#{{ selected.id }}</span></div>
+        <div class="kv"><span>Name</span><span>{{ selected.name }}</span></div>
+        <div class="kv"><span>Category</span><span>{{ selected.categoryName
+            }}</span></div>
+        <div class="kv"><span>Price</span><span>{{ selected.price
+            }}</span></div>
+        <div class="kv"><span>Expiry</span><span>{{
+            formatDate(selected.expiryDate) }}</span></div>
+        <div class="kv"><span>Description</span><span>{{ selected.description
+            }}</span></div>
+
+        <div class="detail-actions">
+          <button mat-stroked-button (click)="previous()">
+            <mat-icon>chevron_left</mat-icon> Previous
+          </button>
+          <button mat-stroked-button (click)="next()">
+            Next <mat-icon>chevron_right</mat-icon>
+          </button>
+          <button mat-button (click)="clearSelection()">Clear</button>
+        </div>
+      </mat-card-content>
+
+      <ng-template #empty>
+        <mat-card-content class="muted">
+          Select a product row to see details. Use Previous/Next to navigate.
+        </mat-card-content>
+      </ng-template>
+    </mat-card>
+  </div>
+</div>
