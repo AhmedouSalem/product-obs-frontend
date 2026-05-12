@@ -6,12 +6,12 @@
     </div>
 
     <mat-nav-list>
-      <a mat-list-item routerLink="/products" routerLinkActive="active">
+      <a mat-list-item routerLink="/products" routerLinkActive="active" data-cy="nav-products">
         <mat-icon matListItemIcon>shopping_cart</mat-icon>
         <span matListItemTitle>Products</span>
       </a>
 
-      <a mat-list-item routerLink="/categories" routerLinkActive="active">
+      <a mat-list-item routerLink="/categories" routerLinkActive="active" data-cy="nav-categories">
         <mat-icon matListItemIcon>category</mat-icon>
         <span matListItemTitle>Categories</span>
       </a>
@@ -27,7 +27,7 @@
         {{ u.name }} · {{ u.email }}
       </span>
 
-      <button mat-raised-button color="accent" (click)="logout()">
+      <button mat-raised-button color="accent" (click)="logout()" data-cy="logout-button">
         Logout
       </button>
     </mat-toolbar>

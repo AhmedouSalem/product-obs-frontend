@@ -9,7 +9,7 @@
 
       <button mat-raised-button color="primary"
         (click)="openCreateDialog()"
-        [disabled]="loading || !categories.length">
+        [disabled]="loading || !categories.length" data-cy="product-create-open">
         <mat-icon>add</mat-icon>
         Create
       </button>
@@ -19,12 +19,12 @@
 
   <mat-card class="card">
     <mat-card-content class="toolbar">
-      <button mat-stroked-button (click)="loadAll()" [disabled]="loading">
+      <button mat-stroked-button (click)="loadAll()" [disabled]="loading" data-cy="product-load-all">
         <mat-icon>refresh</mat-icon>
         Load all
       </button>
 
-      <button mat-stroked-button (click)="mostExpensive()" [disabled]="loading">
+      <button mat-stroked-button (click)="mostExpensive()" [disabled]="loading" data-cy="product-most-expensive">
         <mat-icon>trending_up</mat-icon>
         Most expensive
       </button>
@@ -32,7 +32,7 @@
       <mat-form-field appearance="outline" class="catField">
         <mat-label>Category</mat-label>
         <mat-select [(ngModel)]="selectedCategoryId"
-          (selectionChange)="onCategoryChange()">
+          (selectionChange)="onCategoryChange()" data-cy="filter-category">
           <mat-option [value]="null">All</mat-option>
           <mat-option *ngFor="let c of categories" [value]="c.id">
             {{ c.name }}
@@ -45,7 +45,7 @@
         <input
           matInput
           placeholder="Name, category, price…"
-          (keyup)="applySearch($event.target.value)" />
+          (keyup)="applySearch($event.target.value)" data-cy="product-search" />
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
 
@@ -56,7 +56,7 @@
       </button> -->
 
       <button mat-stroked-button (click)="mostExpensiveByCategory()"
-        [disabled]="loading">
+        [disabled]="loading" data-cy="product-most-expensive-by-category">
         <mat-icon>star</mat-icon>
         Most expensive by category
       </button>
@@ -113,16 +113,16 @@
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let row">
-                <button mat-button (click)="selectRow(row)">
+                <button mat-button (click)="selectRow(row)" data-cy="product-view-button">
                   <mat-icon>visibility</mat-icon>
                 </button>
 
-                <button mat-button (click)="openEditDialog(row)">
+                <button mat-button (click)="openEditDialog(row)" data-cy="product-edit-button">
                   <mat-icon>edit</mat-icon>
                 </button>
 
                 <button mat-button color="warn"
-                  (click)="openDeleteDialog(row)">
+                  (click)="openDeleteDialog(row)" data-cy="product-delete-button">
                   <mat-icon>delete</mat-icon>
                 </button>
               </td>
@@ -131,6 +131,8 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 
             <tr mat-row
+              data-cy="product-row"
+              [attr.data-product-name]="row.name"
               *matRowDef="let row; columns: displayedColumns;"
               (click)="selectRow(row)"
               [class.selected]="isSelected(row)">
@@ -144,36 +146,60 @@
     </mat-card>
 
     <!-- Details panel -->
-    <mat-card class="card details">
-      <mat-card-title>Details</mat-card-title>
-      <mat-card-content *ngIf="selected; else empty">
-        <div class="kv"><span>ID</span><span>#{{ selected.id }}</span></div>
-        <div class="kv"><span>Name</span><span>{{ selected.name }}</span></div>
-        <div class="kv"><span>Category</span><span>{{ selected.categoryName
-            }}</span></div>
-        <div class="kv"><span>Price</span><span>{{ selected.price
-            }}</span></div>
-        <div class="kv"><span>Expiry</span><span>{{
-            formatDate(selected.expiryDate) }}</span></div>
-        <div class="kv"><span>Description</span><span>{{ selected.description
-            }}</span></div>
+<mat-card class="card details" data-cy="product-details">
+  <mat-card-title data-cy="product-details-title">Details</mat-card-title>
 
-        <div class="detail-actions">
-          <button mat-stroked-button (click)="previous()">
-            <mat-icon>chevron_left</mat-icon> Previous
-          </button>
-          <button mat-stroked-button (click)="next()">
-            Next <mat-icon>chevron_right</mat-icon>
-          </button>
-          <button mat-button (click)="clearSelection()">Clear</button>
-        </div>
-      </mat-card-content>
+  <mat-card-content *ngIf="selected; else empty" data-cy="product-details-content">
+    <div class="kv">
+      <span>ID</span>
+      <span data-cy="product-details-id">#{{ selected.id }}</span>
+    </div>
 
-      <ng-template #empty>
-        <mat-card-content class="muted">
-          Select a product row to see details. Use Previous/Next to navigate.
-        </mat-card-content>
-      </ng-template>
-    </mat-card>
+    <div class="kv">
+      <span>Name</span>
+      <span data-cy="product-details-name">{{ selected.name }}</span>
+    </div>
+
+    <div class="kv">
+      <span>Category</span>
+      <span data-cy="product-details-category">{{ selected.categoryName }}</span>
+    </div>
+
+    <div class="kv">
+      <span>Price</span>
+      <span data-cy="product-details-price">{{ selected.price }}</span>
+    </div>
+
+    <div class="kv">
+      <span>Expiry</span>
+      <span data-cy="product-details-expiry">{{ formatDate(selected.expiryDate) }}</span>
+    </div>
+
+    <div class="kv">
+      <span>Description</span>
+      <span data-cy="product-details-description">{{ selected.description }}</span>
+    </div>
+
+    <div class="detail-actions">
+      <button mat-stroked-button data-cy="product-details-previous" (click)="previous()">
+        <mat-icon>chevron_left</mat-icon> Previous
+      </button>
+
+      <button mat-stroked-button data-cy="product-details-next" (click)="next()">
+        Next <mat-icon>chevron_right</mat-icon>
+      </button>
+
+      <button mat-button data-cy="product-details-clear" (click)="clearSelection()">
+        Clear
+      </button>
+    </div>
+  </mat-card-content>
+
+  <ng-template #empty>
+    <mat-card-content class="muted" data-cy="product-details-empty">
+      Select a product row to see details. Use Previous/Next to navigate.
+    </mat-card-content>
+  </ng-template>
+</mat-card>
   </div>
 </div>

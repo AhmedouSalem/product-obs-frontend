@@ -1,32 +1,32 @@
 <h2 mat-dialog-title>{{ title }}</h2>
 
-<div mat-dialog-content class="content">
+<div mat-dialog-content class="content" data-cy="product-form">
     <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
-        <input matInput [(ngModel)]="form.name" name="name" required />
+        <input matInput [(ngModel)]="form.name" name="name" data-cy="product-name" required />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
         <mat-label>Description</mat-label>
-        <input matInput [(ngModel)]="form.description" name="description"
+        <input matInput [(ngModel)]="form.description" name="description" data-cy="product-description"
             required />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
         <mat-label>Price</mat-label>
-        <input matInput type="number" [(ngModel)]="form.price" name="price"
+        <input matInput type="number" [(ngModel)]="form.price" name="price" data-cy="product-price"
             required />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
         <mat-label>Expiry date</mat-label>
         <input matInput type="date" [(ngModel)]="form.expiryDate"
-            name="expiryDate" required />
+            name="expiryDate" data-cy="product-expiry" required />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
         <mat-label>Category</mat-label>
-        <mat-select [(ngModel)]="form.categoryId" name="categoryId" required>
+        <mat-select [(ngModel)]="form.categoryId" name="categoryId" data-cy="product-category" required>
             <mat-option *ngFor="let c of categories" [value]="c.id">
                 {{ c.name }}
             </mat-option>
@@ -35,7 +35,7 @@
 </div>
 
 <div mat-dialog-actions align="end">
-    <button mat-button (click)="cancel()">Cancel</button>
-    <button mat-raised-button color="primary" (click)="submit()">{{ submitLabel
+    <button mat-button (click)="cancel()" data-cy="product-cancel">Cancel</button>
+    <button mat-raised-button color="primary" (click)="submit()" data-cy="product-submit">{{ submitLabel
         }}</button>
 </div>
